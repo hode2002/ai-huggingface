@@ -1,12 +1,19 @@
 import { Request, Response } from 'express';
-import { generateImage } from '../services/generate.service.js';
-import { GenerateOptions } from '../interfaces/generate.interface.js';
+import { fluxDev, fluxPro,  } from '../services/generate.service.js';
+import { ModelName } from '../types/model.type.js';
+
+const models = {
+  'fluxDev': fluxDev,
+  'fluxPro': fluxPro 
+} as const;
 
 export async function generateImageController(req: Request, res: Response): Promise<void> {
-    const options: GenerateOptions = req.body;
-    console.log('Generating image with options: ', JSON.stringify(options))
-  
-    try {
+  try {
+      const modelName = (req.query.model as ModelName) || 'fluxDev';
+
+      const options: any = req.body;
+      console.log('Generating image with options: ', JSON.stringify(options), ' model: ', modelName)
+    
       if (!options.prompt) {
         res.status(400).json({
           success: false,
@@ -15,7 +22,7 @@ export async function generateImageController(req: Request, res: Response): Prom
         return;
       }
 
-      const result = await generateImage(options);
+      const result = await models[modelName](options)
 
       if (result.error) {
         res.status(500).json({
