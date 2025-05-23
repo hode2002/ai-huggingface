@@ -1,22 +1,18 @@
-import { client } from "@gradio/client";
-import dotenv from 'dotenv';
 import { EnhanceOptions, EnhanceResult, GradioResponse } from "../interfaces/enhance.interface";
-
-dotenv.config();
+import { Client } from "@gradio/client";
 
 export async function enhanceImage(options: EnhanceOptions): Promise<EnhanceResult> {
   try {
-    const spaceUrl = process.env.GRADIO_SPACE_URL;
-    if (!spaceUrl) {
-      throw new Error("GRADIO_SPACE_URL environment variable is not set");
-    }
+      const realEsrganSpace = process.env.REAL_ESRGAN_SPACE;
+      if (!realEsrganSpace) {
+        throw new Error("REAL_ESRGAN_SPACE environment variable is not set");
+      }
 
-    const clientInstance = await client(spaceUrl);
- 
-    const result = await clientInstance.predict(0, [
-      options.image,
-      options.size || "2x"
-    ]) as unknown as GradioResponse;
+      const client = await Client.connect(realEsrganSpace);
+      const result = await client.predict("/predict", {
+          image: options.image,
+          size: options.size || "2x"
+      }) as unknown as GradioResponse;
 
     if (!result.data || !Array.isArray(result.data) || result.data.length === 0) {
       console.error("Invalid result structure:", result);
