@@ -3,6 +3,10 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import { enhanceImageController } from './controllers/enhance.controller.js';
+import { generateImageController } from './controllers/generate.controller.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3002;
@@ -20,6 +24,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.post('/enhance', enhanceImageController);
+app.post('/generate', generateImageController);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
