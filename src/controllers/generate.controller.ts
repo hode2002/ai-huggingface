@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { fluxDev, fluxPro,  } from '../services/generate.service.js';
 import { ModelName } from '../types/model.type.js';
+import translate from '../services/translate.service.js';
 
 const models = {
   'fluxDev': fluxDev,
@@ -22,6 +23,8 @@ export async function generateImageController(req: Request, res: Response): Prom
         return;
       }
 
+      const prompt = await translate(options.prompt)
+      options.prompt = prompt
       const result = await models[modelName](options)
 
       if (result.error) {
