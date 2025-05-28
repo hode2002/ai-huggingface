@@ -5,6 +5,7 @@ import compression from 'compression';
 import { enhanceImageController } from './controllers/enhance.controller.js';
 import { generateImageController } from './controllers/generate.controller.js';
 import { removeBackgroundController } from './controllers/background-removal.controller.js';
+import { textGeneratorController } from './controllers/text-generator.controller.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -38,6 +39,7 @@ app.use(express.json());
 app.post('/enhance', enhanceImageController);
 app.post('/generate', generateImageController);
 app.post('/remove-background', removeBackgroundController);
+app.post('/text', textGeneratorController);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
