@@ -15,27 +15,27 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3002;
 
-const allowedOrigins = process.env.ALLOW_ORIGINS?.split(',').map(origin => origin.trim()) || [];
-const corsOptions = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    if (!origin) {
-      return callback(null, true);
-    }
 
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['POST'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+const allowedOrigins = process.env.ALLOW_ORIGINS;
+
+const corsOptions = {
+    origin: (
+        origin: string,
+        callback: (error: Error | null, allow?: boolean) => void,
+    ) => {
+        if ((allowedOrigins && allowedOrigins.includes(origin)) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: 'POST',
+    credentials: true,
 };
 
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(compression());
-app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
