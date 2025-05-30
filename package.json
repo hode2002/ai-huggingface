@@ -1,5 +1,5 @@
 {
-  "name": "real-esrgan-service",
+  "name": "ai-huggingface",
   "version": "1.0.0",
   "description": "",
   "main": "dist/server.js",
