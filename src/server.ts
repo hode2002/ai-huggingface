@@ -20,7 +20,7 @@ const allowedOrigins = process.env.ALLOW_ORIGINS;
 
 const corsOptions = {
     origin: (
-        origin: string,
+        origin: string | undefined, 
         callback: (error: Error | null, allow?: boolean) => void,
     ) => {
         if ((allowedOrigins && allowedOrigins.includes(origin)) || !origin) {
