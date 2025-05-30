@@ -2,10 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
+import swaggerUi from 'swagger-ui-express';
 import { enhanceImageController } from './controllers/enhance.controller.js';
 import { generateImageController } from './controllers/generate.controller.js';
 import { removeBackgroundController } from './controllers/background-removal.controller.js';
 import { textGeneratorController } from './controllers/text-generator.controller.js';
+import { swaggerSpec } from './config/swagger.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -36,6 +38,7 @@ app.use(compression());
 app.use(cors(corsOptions));
 app.use(express.json());
 
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.post('/enhance', enhanceImageController);
 app.post('/generate', generateImageController);
 app.post('/remove-background', removeBackgroundController);
@@ -43,4 +46,5 @@ app.post('/text', textGeneratorController);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
-}); 
+  console.log(`Swagger documentation available at http://localhost:${port}/docs`);
+});
