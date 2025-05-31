@@ -15,22 +15,16 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3002;
 
-
-const allowedOrigins = process.env.ALLOW_ORIGINS;
-
+const allowedOrigins = process.env.ALLOW_ORIGINS?.split(',') || [];
 const corsOptions = {
     origin: (
         origin: string | undefined, 
         callback: (error: Error | null, allow?: boolean) => void,
     ) => {
-        if(!origin) {
-            callback(null, true);
-        }
-
-        if (allowedOrigins && allowedOrigins.includes(origin as string)) {
-            callback(null, true);
+        if (!origin || allowedOrigins.includes(origin as string)) {
+            return callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'));
+            return callback(new Error('Not allowed by CORS'));
         }
     },
     methods: 'POST',
